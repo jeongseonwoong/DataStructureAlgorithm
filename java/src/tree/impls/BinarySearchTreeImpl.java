@@ -116,13 +116,37 @@ public class BinarySearchTreeImpl implements BinarySearchTree {
         }
     }
 
+    public BinaryNode minNode(BinaryNode parents){
+        while(parents.left != null){
+            parents = parents.left;
+        }
+        return parents;
+    }
+
     @Override
     public void delete(int value) {
         deleteImpl(root,value);
     }
 
-    private void deleteImpl(BinaryNode parents, int key) {
-
+    private BinaryNode deleteImpl(BinaryNode parents, int value) {
+        if(parents == null){
+            return null;
+        }else if(parents.data >value){
+            parents.left = deleteImpl(parents.left,value);
+        }else if(parents.data < value){
+            parents.right = deleteImpl(parents.right,value);
+        }else{
+            if(parents.left != null && parents.right != null){
+                BinaryNode replaceNode = minNode(parents.right);
+                parents.data = replaceNode.data;
+                parents.right = deleteImpl(parents.right,replaceNode.data);
+            }else{
+                BinaryNode replaceNode = parents.left==null? parents.right:parents.left;
+                parents = null;
+                return replaceNode;
+            }
+        }
+        return parents;
     }
 
 }
