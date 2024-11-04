@@ -55,7 +55,6 @@ public class _32069Solution {
             int lightIndex = sc.nextInt();
             road.set(lightIndex, 0L);
         }
-
         solution(L, N, K, road);
     }
 
