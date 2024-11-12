@@ -1,42 +1,65 @@
 package zigzeg;
 
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class ZigzagTraversal {
     public static void main(String[] args) {
-        int[][] matrix = {
-                {1, 2, 3},
-                {4, 5, 6},
-                {7, 8, 9}
-        };
-
-        String result = zigzagTraversal(matrix);
-        System.out.println(result);
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int K = sc.nextInt();
+        String str;
+        char[] rabbitsJumps = new char[K];
+        str = sc.next();
+        for(int i=0; i<K; i++){
+            rabbitsJumps[i] = str.charAt(i);
+        }
+        solution(N,K,rabbitsJumps);
     }
 
-    public static String zigzagTraversal(int[][] matrix) {
-        int rows = matrix.length;
-        int cols = matrix[0].length;
-        StringBuilder result = new StringBuilder();
+    enum Direction {
+        RIGHT,LEFTDOWN,DOWN,RIGHTUP
+    }
 
-        for (int diag = 0; diag < rows + cols - 1; diag++) {
-            if (diag % 2 == 0) {
-                int r = Math.min(diag, rows - 1);
-                int c = diag - r;
-                while (r >= 0 && c < cols) {
-                    result.append(matrix[r][c]);
-                    r--;
-                    c++;
-                }
-            } else {
-                int c = Math.min(diag, cols - 1);
-                int r = diag - c;
-                while (c >= 0 && r < rows) {
-                    result.append(matrix[r][c]);
-                    r++;
-                    c--;
-                }
+    public static void solution(int N, int K,char[] rabbitsJumps) {
+        int cnt = 1;
+        int[][] map = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            Arrays.fill(map[i], 0);
+        }
+        int row = 0;
+        int col = -1;
+        RabbitMovement.Direction direction = RabbitMovement.Direction.RIGHT;
+        while (cnt <= Math.pow(N, 2)) {
+            if (col == N - 1 && cnt <= Math.pow(N, 2)) {
+                map[++row][col] = cnt++;
+                direction = RabbitMovement.Direction.DOWN;
+            }
+            if (row == N - 1 && cnt <= Math.pow(N, 2)) {
+                map[row][++col] = cnt++;
+                direction = RabbitMovement.Direction.RIGHT;
+            }
+            if (row == 0 && cnt <= Math.pow(N, 2)) {
+                map[row][++col] = cnt++;
+                direction = RabbitMovement.Direction.DOWN;
+            }
+            if (col == 0 && cnt <= Math.pow(N, 2)) {
+                map[++row][col] = cnt++;
+                direction = RabbitMovement.Direction.RIGHT;
+            }
+            if (direction == RabbitMovement.Direction.RIGHT && col != N - 1 && row != 0 && cnt <= Math.pow(N, 2)) {
+                map[--row][++col] = cnt++;
+            }
+            if (direction == RabbitMovement.Direction.DOWN && row != N - 1 && col != 0 && cnt <= Math.pow(N, 2)) {
+                map[++row][--col] = cnt++;
             }
         }
 
-        return result.toString();
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                System.out.print(map[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 }
